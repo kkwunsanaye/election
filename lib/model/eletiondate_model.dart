@@ -2,6 +2,7 @@ import 'dart:convert';
 
 class ElectionDateModel {
   final String id;
+  final String name;
   final String year;
   final String month;
   final String day;
@@ -9,6 +10,7 @@ class ElectionDateModel {
   final String minus;
   ElectionDateModel({
     this.id,
+    this.name,
     this.year,
     this.month,
     this.day,
@@ -18,6 +20,7 @@ class ElectionDateModel {
 
   ElectionDateModel copyWith({
     String id,
+    String name,
     String year,
     String month,
     String day,
@@ -26,6 +29,7 @@ class ElectionDateModel {
   }) {
     return ElectionDateModel(
       id: id ?? this.id,
+      name: name ?? this.name,
       year: year ?? this.year,
       month: month ?? this.month,
       day: day ?? this.day,
@@ -37,6 +41,7 @@ class ElectionDateModel {
   Map<String, dynamic> toMap() {
     return {
       'id': id,
+      'name': name,
       'year': year,
       'month': month,
       'day': day,
@@ -48,6 +53,7 @@ class ElectionDateModel {
   factory ElectionDateModel.fromMap(Map<String, dynamic> map) {
     return ElectionDateModel(
       id: map['id'],
+      name: map['name'],
       year: map['year'],
       month: map['month'],
       day: map['day'],
@@ -58,33 +64,36 @@ class ElectionDateModel {
 
   String toJson() => json.encode(toMap());
 
-  factory ElectionDateModel.fromJson(String source) => ElectionDateModel.fromMap(json.decode(source));
+  factory ElectionDateModel.fromJson(String source) =>
+      ElectionDateModel.fromMap(json.decode(source));
 
   @override
   String toString() {
-    return 'ElectionDateModel(id: $id, year: $year, month: $month, day: $day, hour: $hour, minus: $minus)';
+    return 'ElectionDateModel(id: $id, name: $name, year: $year, month: $month, day: $day, hour: $hour, minus: $minus)';
   }
 
   @override
   bool operator ==(Object other) {
     if (identical(this, other)) return true;
-  
+
     return other is ElectionDateModel &&
-      other.id == id &&
-      other.year == year &&
-      other.month == month &&
-      other.day == day &&
-      other.hour == hour &&
-      other.minus == minus;
+        other.id == id &&
+        other.name == name &&
+        other.year == year &&
+        other.month == month &&
+        other.day == day &&
+        other.hour == hour &&
+        other.minus == minus;
   }
 
   @override
   int get hashCode {
     return id.hashCode ^
-      year.hashCode ^
-      month.hashCode ^
-      day.hashCode ^
-      hour.hashCode ^
-      minus.hashCode;
+        name.hashCode ^
+        year.hashCode ^
+        month.hashCode ^
+        day.hashCode ^
+        hour.hashCode ^
+        minus.hashCode;
   }
 }

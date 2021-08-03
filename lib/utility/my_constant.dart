@@ -1,10 +1,18 @@
 import 'package:flutter/material.dart';
 
 class MyConstant {
-
+  static final String apiGetAllElectionDate =
+      'https://www.androidthai.in.th/election/getAllEletionDate.php';
+  static final String apiGettShowElectio =
+      'https://www.androidthai.in.th/election/getAllShowElection.php';
+  static final String apiGetAllCity =
+      'https://www.androidthai.in.th/election/getAllcity.php';
   static final String routeAutenLandscape = '/authenLandscape';
   static final String routeShowResult = '/showResult';
-  static final String routeBeforeElection ='/beforeElection';
+  static final String routeBeforeElection = '/beforeElection';
+  static final String routeAfterElection = '/afterElecttion';
+  static final String routeShowScore = '/showScore';
+
   static final String election = 'ตู้เลือกตั้ง';
   static final String nonChoose = 'ไม่ประสงค์ลงคะแนน';
   static final String cancel = 'ยกเลิก';
@@ -17,7 +25,6 @@ class MyConstant {
   static final String logo = 'images/logo.png';
   static final String cancelImage = 'images/cancel.png';
   static final String domain = 'https://www.androidthai.in.th';
-  
 
   Widget showTitle(String title, TextStyle textStyle) => Text(
         title,
@@ -40,7 +47,7 @@ class MyConstant {
         color: greenDark,
       );
 
-      TextStyle h1whiteStyle() => TextStyle(
+  TextStyle h1whiteStyle() => TextStyle(
         fontSize: 16,
         fontWeight: FontWeight.bold,
         color: Colors.white,
@@ -49,5 +56,10 @@ class MyConstant {
         fontSize: 14,
         fontWeight: FontWeight.normal,
         color: Colors.white,
+      );
+  TextStyle h2YellowStyle() => TextStyle(
+        fontSize: 14,
+        fontWeight: FontWeight.normal,
+        color: yellowlight,
       );
 }

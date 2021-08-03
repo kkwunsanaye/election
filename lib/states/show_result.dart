@@ -31,7 +31,7 @@ class _ShowReslutState extends State<ShowReslut> {
   }
 
   Future<Null> readAllData() async {
-    String apiReadData = '${MyConstant.domain}/election/getAllFood.php';
+    String apiReadData = 'https://www.androidthai.in.th/election/getAllcity.php';
     await Dio().get(apiReadData).then((value) {
       for (var item in json.decode(value.data)) {
         ElectionModel model = ElectionModel.fromMap(item);
