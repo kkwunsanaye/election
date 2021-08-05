@@ -41,7 +41,7 @@ class _BeforeElectionState extends State<BeforeElection> {
     return Scaffold(
       floatingActionButton: TextButton(
           onPressed: () =>
-              Navigator.pushNamed(context, MyConstant.routeShowScore),
+              Navigator.pushNamed(context, MyConstant.routeShowCheck),
           child: ShowTitle(
               title: 'Check', textStyle: MyConstant().h2YellowStyle())),
       backgroundColor: MyConstant.greenBody,

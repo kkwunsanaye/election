@@ -9,17 +9,17 @@ import 'package:kamelection/provider/amount_provider.dart';
 import 'package:kamelection/states/after_election.dart';
 import 'package:kamelection/states/authen_landscape.dart';
 import 'package:kamelection/states/before_election.dart';
-import 'package:kamelection/states/show_result.dart';
-import 'package:kamelection/states/show_score.dart';
+import 'package:kamelection/states/show_check.dart';
+import 'package:kamelection/states/show_election_result.dart';
 import 'package:kamelection/utility/my_constant.dart';
 import 'package:provider/provider.dart';
 
 final Map<String, WidgetBuilder> map = {
   '/authenLandscape': (BuildContext context) => AuthenLandScape(),
-  '/showResult': (BuildContext context) => ShowReslut(),
+  '/showElectionResult': (BuildContext context) => ShowElectionResult(),
   '/beforeElection': (BuildContext context) => BeforeElection(),
   '/afterElecttion': (BuildContext context) => AfterElection(),
-  '/showScore': (BuildContext context) => ShowScore(),
+  '/showCheck': (BuildContext context) => ShowCheck(),
 };
 
 String initialRoute;
@@ -57,7 +57,7 @@ Future<Null> main() async {
             for (var item in json.decode(value.data)) {
               ShowResultModel model = ShowResultModel.fromMap(item);
               if (model.showElection == 'true') {
-                initialRoute = MyConstant.routeShowResult;
+                initialRoute = MyConstant.routeShowElectionResult;
                 runApp(MyApp());
               } else {
                 initialRoute = MyConstant.routeAfterElection;

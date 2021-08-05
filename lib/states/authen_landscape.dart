@@ -6,6 +6,7 @@ import 'package:kamelection/model/otp_model.dart';
 import 'package:kamelection/states/elcection.dart';
 import 'package:kamelection/utility/dialog.dart';
 import 'package:kamelection/utility/my_constant.dart';
+import 'package:kamelection/utility/my_test.dart';
 import 'package:kamelection/widget/show_logo.dart';
 import 'package:otp_text_field/otp_text_field.dart';
 
@@ -47,6 +48,10 @@ class _AuthenLandScapeState extends State<AuthenLandScape> {
   Widget build(BuildContext context) {
     double size = MediaQuery.of(context).size.width;
     return Scaffold(
+      floatingActionButton: FloatingActionButton(
+        onPressed: () => MyTest().readSQLite(),
+        child: Text('SLQite'),
+      ),
       body: SafeArea(
         child: Container(
           decoration: BoxDecoration(color: MyConstant.greenBody),

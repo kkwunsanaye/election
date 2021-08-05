@@ -17,7 +17,6 @@ import 'package:kamelection/widget/show_rogress.dart';
 import 'package:kamelection/widget/show_title.dart';
 import 'package:provider/provider.dart';
 
-
 class Election extends StatefulWidget {
   final OtpModel otpModel;
   Election({@required this.otpModel});
@@ -72,9 +71,9 @@ class _ElectionState extends State<Election> {
   }
 
   Future<Null> deleteAllSQLite() async {
-    await SQLiteHelper()
-        .deleteAllData()
-        .then((value) => print('### deleteAllSQLite Success'));
+    await SQLiteHelper().deleteAllData().then((value) {
+      // print('### deleteAllSQLite Success');
+    });
   }
 
   Future<Null> readData() async {
@@ -90,7 +89,8 @@ class _ElectionState extends State<Election> {
         if (value.toString() != 'null') {
           for (var item in json.decode(value.data)) {
             ElectionModel model = ElectionModel.fromMap(item);
-            print('#### urlimage ===>>> ${MyConstant.domain}/election/${model.image}');
+            // print(
+            //     '#### urlimage ===>>> ${MyConstant.domain}/election/${model.image}');
             if (click) {
               chooses.add(false);
             }
@@ -249,59 +249,59 @@ class _ElectionState extends State<Election> {
                               //ที่คลิกเลือกตั้ง choose=> true เลืิิอก, false ไม่เลือก
                               onTap: () {
                                 if (!nonChooseBool) {
-                                  normalDialog(context, MyConstant.nonChoose, 'ถ้าประสงค์ ลงคะแนน ต้องไปปลดออกก่อน');
-                                  
+                                  normalDialog(context, MyConstant.nonChoose,
+                                      'ถ้าประสงค์ ลงคะแนน ต้องไปปลดออกก่อน');
                                 } else {
                                   if (amountInt != 0) {
-                                  setState(() {
-                                    chooses[index] = !chooses[index];
-                                  });
+                                    setState(() {
+                                      chooses[index] = !chooses[index];
+                                    });
 
-                                  if (chooses[index]) {
-                                    amountInt--;
-                                    AmountModel model =
-                                        AmountModel(amount: amountInt);
-                                    amountProvider.addAmountProvider(model);
+                                    if (chooses[index]) {
+                                      amountInt--;
+                                      AmountModel model =
+                                          AmountModel(amount: amountInt);
+                                      amountProvider.addAmountProvider(model);
 
-                                    choiceChoosesIds
-                                        .add(electionModels[index].id);
-                                    print(
-                                        '## choiceChooseIds ==>> $choiceChoosesIds');
+                                      choiceChoosesIds
+                                          .add(electionModels[index].id);
+                                      // print(
+                                      //     '## choiceChooseIds ==>> $choiceChoosesIds');
+                                    } else {
+                                      amountInt++;
+                                      AmountModel model =
+                                          AmountModel(amount: amountInt);
+                                      amountProvider.addAmountProvider(model);
+
+                                      // print(
+                                      //     '### index ที่ไม่เลือก ==>> ${electionModels[index].id}');
+                                      choiceChoosesIds
+                                          .remove(electionModels[index].id);
+                                      // print(
+                                      //     '## choiceChooseIds ใหม่ ==>> $choiceChoosesIds');
+                                    }
+                                  } else if (chooses[index]) {
+                                    setState(() {
+                                      chooses[index] = !chooses[index];
+                                    });
+
+                                    if (chooses[index]) {
+                                      amountInt--;
+                                      AmountModel model =
+                                          AmountModel(amount: amountInt);
+                                      amountProvider.addAmountProvider(model);
+                                    } else {
+                                      amountInt++;
+                                      AmountModel model =
+                                          AmountModel(amount: amountInt);
+                                      amountProvider.addAmountProvider(model);
+                                    }
                                   } else {
-                                    amountInt++;
-                                    AmountModel model =
-                                        AmountModel(amount: amountInt);
-                                    amountProvider.addAmountProvider(model);
-
-                                    print(
-                                        '### index ที่ไม่เลือก ==>> ${electionModels[index].id}');
-                                    choiceChoosesIds
-                                        .remove(electionModels[index].id);
-                                    print(
-                                        '## choiceChooseIds ใหม่ ==>> $choiceChoosesIds');
+                                    normalDialog(context, 'คุณเลือกครบแล้ว !!!',
+                                        'ไม่สามารถเลือกได้คะ คุณเลือกครบแล้ว');
                                   }
-                                } else if (chooses[index]) {
-                                  setState(() {
-                                    chooses[index] = !chooses[index];
-                                  });
-
-                                  if (chooses[index]) {
-                                    amountInt--;
-                                    AmountModel model =
-                                        AmountModel(amount: amountInt);
-                                    amountProvider.addAmountProvider(model);
-                                  } else {
-                                    amountInt++;
-                                    AmountModel model =
-                                        AmountModel(amount: amountInt);
-                                    amountProvider.addAmountProvider(model);
-                                  }
-                                } else {
-                                  normalDialog(context, 'คุณเลือกครบแล้ว !!!',
-                                      'ไม่สามารถเลือกได้คะ คุณเลือกครบแล้ว');
                                 }
-                                }
-                              },// End onTAP
+                              }, // End onTAP
                               child: Card(
                                 color: chooses[index]
                                     ? MyConstant.redLight
@@ -381,7 +381,7 @@ class _ElectionState extends State<Election> {
               normalDialog(context, 'ยังไม่ได้เลือกใครเลย ?',
                   'โปรดเลือก หรือ ไม่ประสงค์ลงคะแนน');
             } else {
-              print('###### คุณเลือก ==>> $choiceChoosesIds');
+              // print('###### คุณเลือก ==>> $choiceChoosesIds');
               editStatusAndSaveChoiceChoosId();
             }
           },
@@ -395,18 +395,80 @@ class _ElectionState extends State<Election> {
 
     await SQLiteHelper().readAllData().then((value) async {
       sqliteModels = value;
+      // print('จำนวนขนาดของ SQL ==>> ${sqliteModels.length} ');
       for (var item in sqliteModels) {
-        print('### id = ${item.id} | ${item.idOtp} | ${item.choiceChooseId}');
+        // print('### id = ${item.id} | ${item.idOtp} | ${item.choiceChooseId}');
+        print('######### choiceChooseId  =>>>> ${item.choiceChooseId}');
+
+        String string = item.choiceChooseId;
+        string = string.substring(1, string.length - 1);
+        List<String> strings = string.split(',');
+        for (var item in strings) {
+          String id = item.trim();
+          String apiGetScoreWhereId =
+              'https://www.androidthai.in.th/election/getElectionWhereId.php?isAdd=true&id=$id';
+          await Dio().get(apiGetScoreWhereId).then((value) async {
+            for (var item in json.decode(value.data)) {
+              ElectionModel electionModel = ElectionModel.fromMap(item);
+              String scoreStr = electionModel.score;
+              print('######## scoreStr =>>>> $scoreStr');
+
+              int score = int.parse(scoreStr) + 1;
+
+              String apiEditScoreWhereId =
+                  'https://www.androidthai.in.th/election/editScoreWhereId.php?isAdd=true&id=$id&score=$score';
+              await Dio().get(apiEditScoreWhereId).then((value) {
+                print(
+                    '####### Edit id ผู้สมัครที่ $id มีค่า Score ===>> $score');
+              });
+            }
+          });
+        }
 
         String path =
             '${MyConstant.domain}/election/editChooseWhereId.php?isAdd=true&id=${item.idOtp}&choiceChooseIds=${item.choiceChooseId}';
-        print('### path api of editChoise ==>> $path');
-        await Dio().get(path).then((value) => print('##### Edit Finish #####'));
+        // print('### path api of editChoise ==>> $path');
+        await Dio().get(path).then((value) {
+          // print('##### Edit Finish #####');
+        });
       }
     }).then((value) {
       deleteAllSQLite();
+      // calculateScore();
       Navigator.pushNamedAndRemoveUntil(
-          context, '/showResult', (route) => false);
+          context, MyConstant.routeAfterElection, (route) => false);
+    });
+  }
+
+  Future<Null> calculateScore() async {
+    await Dio().get(MyConstant.apiGetAllotp).then((value) async {
+      for (var item in json.decode(value.data)) {
+        OtpModel model = OtpModel.fromMap(item);
+        if (model.status == 'false') {
+          String scoreStr = model.choiceChooseIds;
+          scoreStr = scoreStr.substring(1, scoreStr.length - 1);
+          List<String> strings = scoreStr.split(',');
+
+          for (var item in strings) {
+            String id = item.trim();
+            String apiGetScoreWhereId =
+                'https://www.androidthai.in.th/election/getElectionWhereId.php?isAdd=true&id=$id';
+            await Dio().get(apiGetScoreWhereId).then((value) async {
+              for (var item in json.decode(value.data)) {
+                ElectionModel electionModel = ElectionModel.fromMap(item);
+                String scoreStr = electionModel.score;
+                int score = int.parse(scoreStr) + 1;
+
+                String apiEditScoreWhereId =
+                    'https://www.androidthai.in.th/election/editScoreWhereId.php?isAdd=true&id=$id&score=$score';
+                await Dio().get(apiEditScoreWhereId).then((value) {
+                  // print('### Update at id = $id OK');
+                });
+              }
+            });
+          }
+        }
+      }
     });
   }
 
@@ -418,7 +480,7 @@ class _ElectionState extends State<Election> {
     await Dio().get(path).then((value) async {
       if (value.toString() == 'true') {
         // 2. Save choiceChoosesIds -> Sharepreferance
-        print('######## Edit Status Success ##########');
+        // print('######## Edit Status Success ##########');
 
         SQLiteModel model = SQLiteModel(
             idOtp: otpModel.id, choiceChooseId: choiceChoosesIds.toString());
@@ -428,8 +490,8 @@ class _ElectionState extends State<Election> {
           int day = int.parse(electionDateModel.day);
           int hour = int.parse(electionDateModel.hour);
           int minus = int.parse(electionDateModel.minus);
-          print(
-              'year = $year, month = $month, day = $day, hour = $hour, minus = $minus');
+          // print(
+          //     'year = $year, month = $month, day = $day, hour = $hour, minus = $minus');
 
           DateTime dateTime = DateTime(
             year,
@@ -438,9 +500,12 @@ class _ElectionState extends State<Election> {
             hour,
             minus,
           );
+          // // ทดลองปิดระบบ Save ตามเวลา จะใช้ Save เดี๋ยวนี้
           Timer(dateTime.difference(DateTime.now()), () async {
             readSQLite();
           });
+          // readSQLite();
+
           Navigator.pushNamedAndRemoveUntil(
               context, '/authenLandscape', (route) => false);
         });
