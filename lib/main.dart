@@ -6,7 +6,9 @@ import 'package:flutter/services.dart';
 import 'package:kamelection/model/eletiondate_model.dart';
 import 'package:kamelection/model/show_result_model.dart';
 import 'package:kamelection/provider/amount_provider.dart';
+import 'package:kamelection/states/admin_controller.dart';
 import 'package:kamelection/states/after_election.dart';
+import 'package:kamelection/states/authen_admin.dart';
 import 'package:kamelection/states/authen_landscape.dart';
 import 'package:kamelection/states/before_election.dart';
 import 'package:kamelection/states/show_check.dart';
@@ -20,6 +22,8 @@ final Map<String, WidgetBuilder> map = {
   '/beforeElection': (BuildContext context) => BeforeElection(),
   '/afterElecttion': (BuildContext context) => AfterElection(),
   '/showCheck': (BuildContext context) => ShowCheck(),
+  '/authenAdmin': (BuildContext context) => AuthenAdmin(),
+  '/adminController': (BuildContext context) => AdminController(),
 };
 
 String initialRoute;

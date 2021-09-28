@@ -59,6 +59,8 @@ class _ElectionState extends State<Election> {
 
     readData();
     readEletionDate();
+
+    readSQLite();
   }
 
   Future<Null> readEletionDate() async {
@@ -81,7 +83,7 @@ class _ElectionState extends State<Election> {
       widgets.clear();
     }
 
-    String api = '${MyConstant.domain}/election/getAllSchool.php';
+    String api = '${MyConstant.domain}/election/getAllcity.php';
 
     await Dio().get(api).then(
       (value) {
@@ -149,7 +151,9 @@ class _ElectionState extends State<Election> {
           GestureDetector(
             onTap: () {
               click = false;
-              // print('#### you Click choiceInt ==>> $choiceInt');
+              // print('=====================================================');
+              // print('########[[[[]]]] you Click choiceInt ==>> $choiceInt');
+              // print('=====================================================');
               setState(() {
                 chooses[choiceInt - 1] = !chooses[choiceInt - 1];
                 readData();
@@ -185,176 +189,190 @@ class _ElectionState extends State<Election> {
     size = MediaQuery.of(context).size.width;
     return Scaffold(
       backgroundColor: Colors.green.shade300,
-      appBar: AppBar(
-        title: Text(MyConstant.election),
-        actions: [
-          Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              MyConstant().showTitle(
-                otpModel.name,
-                MyConstant().h1whiteStyle(),
-              ),
-              buildAmount(),
-            ],
-          ),
-          SizedBox(
-            width: 30,
-          ),
-        ],
-      ),
+      appBar: buildAppBar(),
       body: Row(
         children: [
-          Expanded(
-            flex: 3,
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Container(
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(20),
-                  color: MyConstant.greenBody,
-                ),
-                child: load
-                    ? ShowProgress()
-                    : GridView.builder(
-                        gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
-                            maxCrossAxisExtent: 250, childAspectRatio: 3),
-                        itemCount: electionModels.length,
-                        itemBuilder: (context, index) => Row(
-                          children: [
-                            Card(
-                              child: Container(
-                                width: 150,
-                                child: Row(
-                                  children: [
-                                    Container(
-                                      width: 60,
-                                      height: 60,
-                                      child: Image.network(
-                                        '${MyConstant.domain}/election/${electionModels[index].image}',
-                                        fit: BoxFit.cover,
-                                      ),
-                                    ),
-                                    Container(
-                                      width: 60,
-                                      child: ShowTitle(
-                                          title: electionModels[index].name,
-                                          textStyle: MyConstant().h1Style()),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                            GestureDetector(
-                              //ที่คลิกเลือกตั้ง choose=> true เลืิิอก, false ไม่เลือก
-                              onTap: () {
-                                if (!nonChooseBool) {
-                                  normalDialog(context, MyConstant.nonChoose,
-                                      'ถ้าประสงค์ ลงคะแนน ต้องไปปลดออกก่อน');
-                                } else {
-                                  if (amountInt != 0) {
-                                    setState(() {
-                                      chooses[index] = !chooses[index];
-                                    });
-
-                                    if (chooses[index]) {
-                                      amountInt--;
-                                      AmountModel model =
-                                          AmountModel(amount: amountInt);
-                                      amountProvider.addAmountProvider(model);
-
-                                      choiceChoosesIds
-                                          .add(electionModels[index].id);
-                                      // print(
-                                      //     '## choiceChooseIds ==>> $choiceChoosesIds');
-                                    } else {
-                                      amountInt++;
-                                      AmountModel model =
-                                          AmountModel(amount: amountInt);
-                                      amountProvider.addAmountProvider(model);
-
-                                      // print(
-                                      //     '### index ที่ไม่เลือก ==>> ${electionModels[index].id}');
-                                      choiceChoosesIds
-                                          .remove(electionModels[index].id);
-                                      // print(
-                                      //     '## choiceChooseIds ใหม่ ==>> $choiceChoosesIds');
-                                    }
-                                  } else if (chooses[index]) {
-                                    setState(() {
-                                      chooses[index] = !chooses[index];
-                                    });
-
-                                    if (chooses[index]) {
-                                      amountInt--;
-                                      AmountModel model =
-                                          AmountModel(amount: amountInt);
-                                      amountProvider.addAmountProvider(model);
-                                    } else {
-                                      amountInt++;
-                                      AmountModel model =
-                                          AmountModel(amount: amountInt);
-                                      amountProvider.addAmountProvider(model);
-                                    }
-                                  } else {
-                                    normalDialog(context, 'คุณเลือกครบแล้ว !!!',
-                                        'ไม่สามารถเลือกได้คะ คุณเลือกครบแล้ว');
-                                  }
-                                }
-                              }, // End onTAP
-                              child: Card(
-                                color: chooses[index]
-                                    ? MyConstant.redLight
-                                    : MyConstant.redDark,
-                                child: Padding(
-                                  padding: const EdgeInsets.all(14.0),
-                                  child: ShowTitle(
-                                      title: '${index + 1}',
-                                      textStyle: MyConstant().h0Style()),
-                                ),
-                              ),
-                            )
-                          ],
-                        ),
-                      ),
-              ),
-            ),
-          ),
-          Expanded(
-            flex: 1,
-            child: Padding(
-              padding: const EdgeInsets.only(top: 8, bottom: 8, right: 8),
-              child: Container(
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(20),
-                  color: MyConstant.greenDark,
-                ),
-                child: Center(
-                  child: SingleChildScrollView(
-                    child: Column(
-                      children: [
-                        buildLogo(),
-                        buildMidButton(),
-                        buildSave(),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-            ),
-          ),
+          buildLeftContent(),
+          buildRightContent(),
         ],
       ),
     );
   }
 
+  Expanded buildRightContent() {
+    return Expanded(
+      flex: 1,
+      child: Padding(
+        padding: const EdgeInsets.only(top: 8, bottom: 8, right: 8),
+        child: Container(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(20),
+            color: MyConstant.greenDark,
+          ),
+          child: Center(
+            child: SingleChildScrollView(
+              child: Column(
+                children: [
+                  buildLogo(),
+                  buildMidButton(),
+                  buildSave(),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Expanded buildLeftContent() {
+    return Expanded(
+      flex: 3,
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Container(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(20),
+            color: MyConstant.greenBody,
+          ),
+          child: load
+              ? ShowProgress()
+              : GridView.builder(
+                  gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
+                      maxCrossAxisExtent: 250, childAspectRatio: 3),
+                  itemCount: electionModels.length,
+                  itemBuilder: (context, index) => Row(
+                    children: [
+                      Card(
+                        child: Container(
+                          width: 150,
+                          child: Row(
+                            children: [
+                              Container(
+                                width: 60,
+                                height: 60,
+                                child: Image.network(
+                                  '${MyConstant.domain}/election/${electionModels[index].image}',
+                                  fit: BoxFit.cover,
+                                ),
+                              ),
+                              Container(
+                                width: 60,
+                                child: ShowTitle(
+                                    title: electionModels[index].name,
+                                    textStyle: MyConstant().h1Style()),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                      GestureDetector(
+                        //ที่คลิกเลือกตั้ง choose=> true เลืิิอก, false ไม่เลือก
+                        onTap: () {
+                          if (!nonChooseBool) {
+                            normalDialog(context, MyConstant.nonChoose,
+                                'ถ้าประสงค์ ลงคะแนน ต้องไปปลดออกก่อน');
+                          } else {
+                            if (amountInt != 0) {
+                              setState(() {
+                                chooses[index] = !chooses[index];
+                              });
+
+                              if (chooses[index]) {
+                                amountInt--;
+                                AmountModel model =
+                                    AmountModel(amount: amountInt);
+                                amountProvider.addAmountProvider(model);
+
+                                choiceChoosesIds.add(electionModels[index].id);
+                                // print(
+                                //     '##@@@@@ choiceChooseIds ==>> $choiceChoosesIds');
+                              } else {
+                                amountInt++;
+                                AmountModel model =
+                                    AmountModel(amount: amountInt);
+                                amountProvider.addAmountProvider(model);
+
+                                // print(
+                                //     '###**** index ที่ไม่เลือก ==>> ${electionModels[index].id}');
+                                choiceChoosesIds
+                                    .remove(electionModels[index].id);
+                                // print(
+                                //     '## choiceChooseIds ใหม่ ==>> $choiceChoosesIds');
+                              }
+                            } else if (chooses[index]) {
+                              setState(() {
+                                chooses[index] = !chooses[index];
+                              });
+
+                              if (chooses[index]) {
+                                amountInt--;
+                                AmountModel model =
+                                    AmountModel(amount: amountInt);
+                                amountProvider.addAmountProvider(model);
+                              } else {
+                                amountInt++;
+                                AmountModel model =
+                                    AmountModel(amount: amountInt);
+                                amountProvider.addAmountProvider(model);
+                              }
+                            } else {
+                              normalDialog(context, 'คุณเลือกครบแล้ว !!!',
+                                  'ไม่สามารถเลือกได้คะ คุณเลือกครบแล้ว');
+                            }
+                          }
+                        }, // End onTAP
+                        child: Card(
+                          color: chooses[index]
+                              ? MyConstant.redLight
+                              : MyConstant.redDark,
+                          child: Padding(
+                            padding: const EdgeInsets.all(14.0),
+                            child: ShowTitle(
+                                title: '${index + 1}',
+                                textStyle: MyConstant().h0Style()),
+                          ),
+                        ),
+                      )
+                    ],
+                  ),
+                ),
+        ),
+      ),
+    );
+  }
+
+  AppBar buildAppBar() {
+    return AppBar(
+      title: Text(MyConstant.election),
+      actions: [
+        Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            MyConstant().showTitle(
+              otpModel.name,
+              MyConstant().h1whiteStyle(),
+            ),
+            buildAmount(),
+          ],
+        ),
+        SizedBox(
+          width: 30,
+        ),
+      ],
+    );
+  }
+
   Widget buildAmount() {
     return Consumer(
-      builder: (context, AmountProvider amountProvider, child) =>
-          MyConstant().showTitle(
-        'จำนวนที่เลือกได้ ${amountProvider.getAmountProivder()[0].amount}',
-        MyConstant().h2whiteStyle(),
-      ),
+      builder: (context, AmountProvider amountProvider, child) {
+        // print(
+        //     '#### amountProvider.getAmountProvider ==>> ${amountProvider.getAmountProvider()}');
+        return MyConstant().showTitle(
+          'จำนวนที่เลือกได้ ${amountProvider.getAmountProivder()[0].amount}',
+          MyConstant().h2whiteStyle(),
+        );
+      },
     );
   }
 
@@ -395,10 +413,12 @@ class _ElectionState extends State<Election> {
 
     await SQLiteHelper().readAllData().then((value) async {
       sqliteModels = value;
-      // print('จำนวนขนาดของ SQL ==>> ${sqliteModels.length} ');
+      print('############################จำนวนขนาดของ SQL ==>> ${sqliteModels.length}');
       for (var item in sqliteModels) {
-        // print('### id = ${item.id} | ${item.idOtp} | ${item.choiceChooseId}');
-        print('######### choiceChooseId  =>>>> ${item.choiceChooseId}');
+        print('### id = ${item.id} | ${item.idOtp} | ${item.choiceChooseId}');
+
+        print('###### choiceChooseId ==>> ${item.choiceChooseId}');
+        // ###### choiceChooseId ==>> [4, 5, 6]
 
         String string = item.choiceChooseId;
         string = string.substring(1, string.length - 1);
@@ -411,15 +431,13 @@ class _ElectionState extends State<Election> {
             for (var item in json.decode(value.data)) {
               ElectionModel electionModel = ElectionModel.fromMap(item);
               String scoreStr = electionModel.score;
-              print('######## scoreStr =>>>> $scoreStr');
-
+              // print('#### scoreStr ==> $scoreStr');
               int score = int.parse(scoreStr) + 1;
 
               String apiEditScoreWhereId =
                   'https://www.androidthai.in.th/election/editScoreWhereId.php?isAdd=true&id=$id&score=$score';
               await Dio().get(apiEditScoreWhereId).then((value) {
-                print(
-                    '####### Edit id ผู้สมัครที่ $id มีค่า Score ===>> $score');
+                // print('### Edit id ผู้สมัครที่ $id มีค่า Score ==>> $score');
               });
             }
           });
@@ -428,9 +446,7 @@ class _ElectionState extends State<Election> {
         String path =
             '${MyConstant.domain}/election/editChooseWhereId.php?isAdd=true&id=${item.idOtp}&choiceChooseIds=${item.choiceChooseId}';
         // print('### path api of editChoise ==>> $path');
-        await Dio().get(path).then((value) {
-          // print('##### Edit Finish #####');
-        });
+        await Dio().get(path).then((value) => print('##### Edit Finish #####'));
       }
     }).then((value) {
       deleteAllSQLite();
@@ -476,7 +492,7 @@ class _ElectionState extends State<Election> {
     // 1. Edit Status to false
     String path =
         '${MyConstant.domain}/election/editStatusWhereId.php?isAdd=true&id=${otpModel.id}';
-    print('### path = $path');
+    // print('######################### path = $path');
     await Dio().get(path).then((value) async {
       if (value.toString() == 'true') {
         // 2. Save choiceChoosesIds -> Sharepreferance
@@ -500,10 +516,11 @@ class _ElectionState extends State<Election> {
             hour,
             minus,
           );
-          // // ทดลองปิดระบบ Save ตามเวลา จะใช้ Save เดี๋ยวนี้
+          // ทดลองปิดระบบ Save ตามเวลา จะใช้ Save เดี๋ยวนี้
           Timer(dateTime.difference(DateTime.now()), () async {
             readSQLite();
           });
+
           // readSQLite();
 
           Navigator.pushNamedAndRemoveUntil(
@@ -545,6 +562,7 @@ class _ElectionState extends State<Election> {
         onPressed: () {
           setState(() {
             nonChooseBool = !nonChooseBool;
+            // print('nonChooseBool ==>> $nonChooseBool');
             if (nonChooseBool == false) {
               delayTime();
             }
@@ -578,13 +596,22 @@ class _ElectionState extends State<Election> {
   }
 
   Future<Null> delayTime() async {
-    Duration duration = Duration(seconds: 2);
+    Duration duration = Duration(milliseconds: 500);
     await Timer(duration, () {
-      for (var item in choiceChoosesIds) {
-        amountInt++;
-        AmountModel model = AmountModel(amount: amountInt);
-        amountProvider.addAmountProvider(model);
-      }
+      // print(
+      //     '####### ค่าที่ได้จากการเลือก  choiceChooseIds =====>>>>> $choiceChoosesIds');
+      // if (amountProvider.amountModels.length != 0) {
+      //   amountProvider.clearAmountProvider();
+      // }
+
+      // for (var item in choiceChoosesIds) {
+      //   amountInt++;
+      //   AmountModel model = AmountModel(amount: amountInt);
+      //   amountProvider.addAmountProvider(model);
+      // }
+      amountInt = int.parse(otpModel.amount);
+      AmountModel model = AmountModel(amount: amountInt);
+      amountProvider.addAmountProvider(model);
 
       chooses.clear();
       for (var item in electionModels) {
@@ -592,7 +619,6 @@ class _ElectionState extends State<Election> {
           chooses.add(false);
         });
       }
-
       choiceChoosesIds.clear();
 
       setState(() {

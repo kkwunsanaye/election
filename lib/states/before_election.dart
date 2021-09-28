@@ -39,16 +39,37 @@ class _BeforeElectionState extends State<BeforeElection> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      floatingActionButton: TextButton(
-          onPressed: () =>
-              Navigator.pushNamed(context, MyConstant.routeShowCheck),
-          child: ShowTitle(
-              title: 'Check', textStyle: MyConstant().h2YellowStyle())),
+      floatingActionButton: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          checkButton(context),
+          adminButton(),
+        ],
+      ),
       backgroundColor: MyConstant.greenBody,
       body: Center(
         child: electionDateModel == null ? ShowProgress() : buildContent(),
       ),
     );
+  }
+
+  TextButton adminButton() {
+    return TextButton(
+      onPressed: () =>
+          Navigator.pushNamed(context, '/authenAdmin'),
+      child: ShowTitle(
+        title: 'สำหรับ Admin',
+        textStyle: MyConstant().h2YellowStyle(),
+      ),
+    );
+  }
+
+  TextButton checkButton(BuildContext context) {
+    return TextButton(
+        onPressed: () =>
+            Navigator.pushNamed(context, MyConstant.routeShowCheck),
+        child: ShowTitle(
+            title: 'รายชื่อผู้สมัคร', textStyle: MyConstant().h2YellowStyle()));
   }
 
   Column buildContent() {

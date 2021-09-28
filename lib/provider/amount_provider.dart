@@ -11,6 +11,13 @@ List<AmountModel>getAmountProivder() {
   return amountModels;
 }
 
+//Clear Provider
+void clearAmountProvider(){
+  amountModels.clear();
+  notifyListeners();
+}
+
+
 // Add Data
 void addAmountProvider(AmountModel amountModel){
   amountModels.clear();
