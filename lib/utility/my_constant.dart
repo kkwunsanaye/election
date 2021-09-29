@@ -50,7 +50,7 @@ class MyConstant {
   TextStyle h2Style() => TextStyle(
         fontSize: 14,
         fontWeight: FontWeight.normal,
-        color: greenDark,
+        color: Colors.white,
       );
 
   TextStyle h1whiteStyle() => TextStyle(
